@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.venv/
+*.sqlite3
+*.db
+
+# Node / React
+node_modules/
+dist/
+build/
+.cache/
+*.log
+
+# Inspection Reports & Uploads
+backend/app/uploads/*
+!backend/app/uploads/.gitkeep
+reports/*.pdf
+!reports/.gitkeep
+
+# Environment
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+.DS_Store
