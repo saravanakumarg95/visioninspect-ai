@@ -165,26 +165,33 @@ async def analyze_image(
         pdf_report_url=f"/api/reports/{inspection_id}.pdf"
     )
 
-    # Generate PDF Report file
-    pdf_path = os.path.join(REPORTS_DIR, f"{inspection_id}.pdf")
-    generate_pdf_report(response, pdf_path)
+    # Generate PDF Report file safely
+    try:
+        pdf_path = os.path.join(REPORTS_DIR, f"{inspection_id}.pdf")
+        generate_pdf_report(response, pdf_path)
+    except Exception as e:
+        print(f"Warning: PDF report generation failed: {e}")
+        pdf_path = ""
 
-    # Save Inspection Record in SQLite DB
-    record = InspectionRecord(
-        id=inspection_id,
-        mode="photo",
-        component_name=component_name,
-        part_number=part_number,
-        operator_name=operator_name,
-        component_type=component_info.detected_class,
-        status=status,
-        readiness_score=quality.readiness_score,
-        scale_px_per_mm=calibration.scale_px_per_mm,
-        data_json=json.dumps(response.model_dump()),
-        pdf_report_path=pdf_path
-    )
-    db.add(record)
-    db.commit()
+    # Save Inspection Record in SQLite DB safely
+    try:
+        record = InspectionRecord(
+            id=inspection_id,
+            mode="photo",
+            component_name=component_name,
+            part_number=part_number,
+            operator_name=operator_name,
+            component_type=component_info.detected_class,
+            status=status,
+            readiness_score=quality.readiness_score,
+            scale_px_per_mm=calibration.scale_px_per_mm,
+            data_json=json.dumps(response.model_dump()),
+            pdf_report_path=pdf_path
+        )
+        db.add(record)
+        db.commit()
+    except Exception as e:
+        print(f"Warning: DB record insert failed: {e}")
 
     return response
 

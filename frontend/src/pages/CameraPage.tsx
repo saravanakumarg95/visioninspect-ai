@@ -108,7 +108,8 @@ export const CameraPage: React.FC = () => {
       navigate(`/result?id=${response.inspection_id}`, { state: { inspection: response } });
     } catch (err: any) {
       console.error("Analysis error:", err);
-      setAnalysisError(err.response?.data?.detail || "Failed to execute computer vision analysis backend pipeline.");
+      const msg = err.response?.data?.detail || err.message || "Failed to execute computer vision analysis backend pipeline.";
+      setAnalysisError(msg);
     } finally {
       setIsAnalyzing(false);
     }
