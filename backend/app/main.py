@@ -31,6 +31,15 @@ app.include_router(reports.router)
 app.include_router(measurement.router)
 app.include_router(defects.router)
 
+@app.get("/")
+async def root():
+    return {
+        "service": "VisionInspect AI API",
+        "status": "online",
+        "docs": "/docs",
+        "health": "/api/health"
+    }
+
 @app.get("/api/health")
 async def health_check():
     return {
